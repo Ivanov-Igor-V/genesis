@@ -8,9 +8,11 @@
 <script>
 import axios from "axios";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
   setup() {
+    const router = useRouter();
     const userID = ref("30878566");
     const onLogin = () => {
       axios
@@ -20,6 +22,7 @@ export default {
         .then(({ data }) => {
           if (data.access_token)
             localStorage.setItem("token", data.access_token);
+          router.push("/");
         })
         .catch((e) => console.log(e));
     };
