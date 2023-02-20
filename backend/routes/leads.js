@@ -1,18 +1,17 @@
 const express = require("express");
-const axios = require("axios");
-const PATH = '/api/v4/leads';
+const PATH = "/api/v4/leads";
 const api = require("../utils/api.js");
 
 const router = express.Router();
 
 router.post("/", (req, res, next) => {
   api
-    .post(`${req.headers.domain}${PATH}`, {
-      body: {
-        name: req.body.name,
+    .post(PATH, req.body, {
+      headers: {
+        Authorization: req.headers.authorisation,
       },
     })
-    .then(({data}) => {
+    .then(({ data }) => {
       console.log(data);
       return res.json(data);
     })
@@ -22,10 +21,12 @@ router.post("/", (req, res, next) => {
     });
 });
 
-
 router.get("/", (req, res, next) => {
   api
-    .get(`${req.headers.domain}${PATH}`, {
+    .get(PATH, {
+      headers: {
+        Authorization: req.headers.authorisation,
+      },
     })
     .then((data) => {
       return res.json(data.data);

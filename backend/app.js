@@ -7,10 +7,10 @@ const dotenv = require("dotenv").config();
 const cors = require("cors");
 
 const indexRouter = require("./routes/index");
-const contactRouter = require("./routes/contact");
-const companyRouter = require("./routes/company");
+const contactRouter = require("./routes/contacts");
+const companyRouter = require("./routes/companies");
 const authRouter = require("./routes/auth");
-const leadRouter = require("./routes/lead");
+const leadRouter = require("./routes/leads");
 
 const app = express();
 
@@ -25,9 +25,9 @@ app.use(cookieParser());
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
-app.use("/company", companyRouter);
-app.use("/contact", contactRouter);
-app.use("/lead", leadRouter);
+app.use("/companies", companyRouter);
+app.use("/contacts", contactRouter);
+app.use("/leads", leadRouter);
 app.use("/auth", authRouter);
 
 // catch 404 and forward to error handler

@@ -22,6 +22,7 @@ export default {
         .then(({ data }) => {
           if (data.access_token)
             localStorage.setItem("token", data.access_token);
+          localStorage.setItem("domain", data.base_domain);
           router.push("/");
         })
         .catch((e) => console.log(e));
