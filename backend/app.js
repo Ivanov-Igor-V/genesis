@@ -5,7 +5,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const dotenv = require("dotenv").config();
 const cors = require("cors");
-
+const bodyParser = require('body-parser');
 const indexRouter = require("./routes/index");
 const contactRouter = require("./routes/contacts");
 const companyRouter = require("./routes/companies");
@@ -20,6 +20,7 @@ app.set("view engine", "jade");
 
 app.use(logger("dev"));
 app.use(express.json());
+app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());

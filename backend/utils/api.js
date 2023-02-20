@@ -7,7 +7,6 @@ const api = axios.create({
 });
 
 const checkTokenInterceptor = (config) => {
-  console.log("from inter", config.headers);
   if (config.headers["x-domain"]) {
     config.baseURL += config.headers["x-domain"];
   }
