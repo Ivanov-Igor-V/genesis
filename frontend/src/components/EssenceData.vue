@@ -27,12 +27,19 @@
 </template>
 
 <script>
+import { useEssences } from "../store/essences";
 export default {
   name: "EssenceData",
   props: {
     data: {
       type: Object,
     },
+  },
+
+  setup() {
+    const storeEssences = useEssences();
+
+    return { storeEssences };
   },
 };
 </script>

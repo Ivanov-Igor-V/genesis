@@ -21,12 +21,13 @@
 </template>
 
 <script>
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import MySelect from "./MySelect.vue";
 import MyButton from "./MyButton.vue";
 import MyInput from "./MyInput.vue";
 import EssenceData from "./EssenceData.vue";
 import EssenceService from "../services/EssenceService";
+import { useEssences } from "../store/essences";
 
 export default {
   components: {
@@ -48,16 +49,24 @@ export default {
     const essenceName = ref(null);
     const loading = ref(false);
 
+    const storeEssences = useEssences();
+
+    onMounted(() => {
+      console.log(storeEssences.getLeads);
+    });
+
     watch(currentEssence, (newVal) => {
       getEssence(newVal);
     });
 
     const getItemDetails = async (id) => {
-      let lol;
-      await essenceService.getLeadByID(id).then((res) => {
-        lol = res;
-      });
-      console.log(lol);
+      // let lol;
+      // await essenceService.getLeadByID(id).then((res) => {
+      //   lol = res;
+      // });
+      // console.log(lol);
+      storeEssences.addLeadToList(id);
+      console.log(storeEssences.leads);
     };
 
     const getEssence = (essense) => {
@@ -129,8 +138,6 @@ export default {
             console.log(e);
           });
     };
-
-    // getEssence();
 
     return {
       options,
