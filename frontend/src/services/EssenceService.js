@@ -12,8 +12,7 @@ const MyApi = axios.create({
 export default class EssenceService {
   // leads
   createLead(data) {
-    console.log("data-log", JSON.stringify(data));
-    return MyApi.post("/leads", JSON.stringify(data))
+    return MyApi.post("/leads", data)
       .then((res) => res)
       .catch((e) => console.log(e));
   }
@@ -31,9 +30,7 @@ export default class EssenceService {
   }
   // Contacts
   createContact(data) {
-    return MyApi.post("/contacts", {
-      name: data.name,
-    })
+    return MyApi.post("/contacts", data)
       .then((res) => res)
       .catch((e) => console.log(e));
   }
@@ -45,9 +42,7 @@ export default class EssenceService {
   }
   // Companies
   createCompany(data) {
-    return MyApi.post("/companies", {
-      name: data.name,
-    })
+    return MyApi.post("/companies", data)
       .then((res) => res)
       .catch((e) => console.log(e));
   }

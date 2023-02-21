@@ -1,33 +1,32 @@
 <template>
   <div class="main">
+    <MyButton @confirm="login" title="Логин" />
     <MySelect
       default="Выберите сущность"
       :options="options"
       @input="currentEssence = $event"
     />
-    <MyInput :value="essenceName" @change="essenceName = $event.target.value" />
+    <div>Имя сущности:</div>
+    <MyInput v-model="essenceName" />
     <MyButton
       @confirm="createEssence(currentEssence)"
       title="Сохранить"
       :loading="loading"
+      :isDisabled="isButtonDisabled"
     />
-    <MyButton
-      @confirm="getItemDetails(1773223)"
-      title="Details"
-      :loading="loading"
-    />
-    <EssenceData :data="essenceData" @toNextPage="() => {}" />
+    <EssenceData :data="essenceData" />
   </div>
 </template>
 
 <script>
-import { onMounted, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import MySelect from "./MySelect.vue";
 import MyButton from "./MyButton.vue";
 import MyInput from "./MyInput.vue";
 import EssenceData from "./EssenceData.vue";
 import EssenceService from "../services/EssenceService";
 import { useEssences } from "../store/essences";
+import { useRouter } from "vue-router";
 
 export default {
   components: {
@@ -43,42 +42,54 @@ export default {
       { title: "Компания", value: "company" },
     ]);
 
+    const router = useRouter();
+
+    const login = () => {
+      localStorage.clear();
+      router.push("/auth");
+    };
+
     const essenceService = new EssenceService();
     const essenceData = ref(null);
     const currentEssence = ref(null);
     const essenceName = ref(null);
     const loading = ref(false);
+    const isButtonDisabled = ref(true);
 
     const storeEssences = useEssences();
 
-    onMounted(() => {
-      console.log(storeEssences.getLeads);
-    });
-
     watch(currentEssence, (newVal) => {
+      isButtonDisabled.value = false;
       getEssence(newVal);
     });
 
-    const getItemDetails = async (id) => {
-      // let lol;
-      // await essenceService.getLeadByID(id).then((res) => {
-      //   lol = res;
-      // });
-      // console.log(lol);
-      storeEssences.addLeadToList(id);
-      console.log(storeEssences.leads);
+    const getEssence = (essense) => {
+      if (essense.value === "lead") {
+        essenceData.value = storeEssences.getLeads;
+      }
+
+      if (essense.value === "contact") {
+        essenceData.value = storeEssences.getContacts;
+      }
+
+      if (essense.value === "company") {
+        essenceData.value = storeEssences.getCompanies;
+      }
     };
 
-    const getEssence = (essense) => {
+    const createEssence = (essense) => {
+      // if (!currentEssence.value) return alert("Выберите сущность");
+      // if (!essenceName.value) return alert("Выберите имя");
       if (essense.value === "lead") {
         loading.value = true;
         return essenceService
-          .getLeads()
-          .then(({ data }) => {
-            essenceData.value = data;
+          .createLead([{ name: essenceName.value }])
+          .then((res) => {
             loading.value = false;
+            storeEssences.addLeadToList(res.data);
           })
           .catch((e) => {
+            loading.value = false;
             console.log(e);
           });
       }
@@ -87,59 +98,33 @@ export default {
         loading.value = true;
 
         return essenceService
-          .getCompanies()
-          .then(({ data }) => {
-            essenceData.value = data;
-            loading.value = false;
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-      }
-
-      loading.value = true;
-      return essenceService
-        .getContacts()
-        .then(({ data }) => {
-          essenceData.value = data;
-          loading.value = false;
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    };
-
-    const createEssence = (essense) => {
-      if (!currentEssence) return alert("Выберите сущность");
-      if (!essenceName) return alert("Выберите имя");
-      if (essense.value === "lead") {
-        console.log("createLead");
-        return essenceService
-          .createLead([{ name: essenceName.value }])
+          .createCompany([{ name: essenceName.value }])
           .then((res) => {
-            console.log(res?.data?._embedded);
+            loading.value = false;
+            storeEssences.addCompanyToList(res.data);
           })
           .catch((e) => {
+            loading.value = false;
             console.log(e);
           });
       }
-      if (essense.value === "company")
+      if (essense.value === "contact") {
+        loading.value = true;
         return essenceService
-          .createCompanie({ name: essenceName.value })
-          .then((res) => (essenceData.value = res?.data))
+          .createContact([{ name: essenceName.value }])
+          .then((res) => {
+            loading.value = false;
+            storeEssences.addContactToList(res.data);
+          })
           .catch((e) => {
+            loading.value = false;
             console.log(e);
           });
-      if (essense.value === "contact")
-        return essenceService
-          .createContact({ name: essenceName.value })
-          .then((res) => (essenceData.value = res?.data))
-          .catch((e) => {
-            console.log(e);
-          });
+      }
     };
 
     return {
+      login,
       options,
       loading,
       currentEssence,
@@ -147,7 +132,7 @@ export default {
       getEssence,
       essenceData,
       createEssence,
-      getItemDetails,
+      isButtonDisabled,
     };
   },
 };

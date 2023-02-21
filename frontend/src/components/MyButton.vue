@@ -1,23 +1,28 @@
 <template>
   <div class="my-button">
-    <button @click="$emit('confirm')">
+    <button @click="$emit('confirm')" :disabled="isDisabled || loading">
       <div v-if="!loading">
         {{ title }}
       </div>
-      <div v-else>...</div>
+      <MyLoader v-else />
     </button>
   </div>
 </template>
 
 <script>
+import MyLoader from "./MyLoader.vue";
 export default {
   name: "MyButton",
+  components: { MyLoader },
   props: {
     title: {
       type: String,
       default: "Ок",
     },
     loading: {
+      type: Boolean,
+    },
+    isDisabled: {
       type: Boolean,
     },
   },
@@ -41,6 +46,14 @@ export default {
     &:focus,
     &:focus-visible {
       outline: none;
+    }
+
+    &:disabled {
+      cursor: initial;
+      background: rgb(167, 167, 230);
+      &:hover {
+        background: rgb(167, 167, 230);
+      }
     }
 
     &:hover {

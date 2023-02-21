@@ -2,8 +2,8 @@
   <div class="my-input">
     <input
       type="text"
-      :value="value"
-      @change="$emit('change', $event.target.value)"
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
     />
   </div>
 </template>
@@ -12,7 +12,7 @@
 export default {
   name: "MyInput",
   props: {
-    value: {
+    modelValue: {
       type: String,
     },
   },

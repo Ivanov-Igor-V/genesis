@@ -13,8 +13,9 @@ router.post("/", (req, res, next) => {
       },
     })
     .then(({ data }) => {
-      console.log(data);
-      return res.json(data);
+      const createIDs = []
+      data._embedded.companies.forEach(company => createIDs.push(company.id) )
+      return res.json(createIDs)
     })
     .catch((err) => {
       console.log(err);
@@ -31,7 +32,9 @@ router.get("/", (req, res, next) => {
       },
     })
     .then((data) => {
-      return res.json(data.data);
+      const createIDs = []
+      data._embedded.companies.forEach(lead => createIDs.push(lead.id) )
+      return res.json(createIDs)
     })
     .catch((err) => {
       console.log(err);

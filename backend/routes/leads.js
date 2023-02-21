@@ -5,17 +5,17 @@ const api = require("../utils/api.js");
 const router = express.Router();
 
 router.post("/", (req, res, next) => {
-  console.log('body', req.body);
   api
-    .post(PATH, [{"name": 'ololo'}], {
+    .post(PATH, JSON.stringify(req.body), {
       headers: {
         Authorization: req.headers.authorisation,
         "x-domain": req.headers["x-domain"]
       },
     })
-    .then(({ data }) => {
-      console.log(data);
-      return res.json(data);
+    .then(({data}) => {
+      const createIDs = []
+      data._embedded.leads.forEach(lead => createIDs.push(lead.id) )
+      return res.json(createIDs)
     })
     .catch((err) => {
       console.log('ERROR!', err);
@@ -45,7 +45,6 @@ router.get("/:id", (req, res, next) => {
   const {id} = req.params
   api
     .get(`${PATH}/${id}`, {
-      // params: id,
       headers: {
         Authorization: req.headers.authorisation,
         "x-domain": req.headers["x-domain"]

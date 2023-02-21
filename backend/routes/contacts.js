@@ -14,7 +14,9 @@ router.post("/", (req, res, next) => {
     })
     .then(({ data }) => {
       console.log(data);
-      return res.json(data);
+      const createIDs = []
+      data._embedded.contacts.forEach(contact => createIDs.push(contact.id) )
+      return res.json(createIDs)
     })
     .catch((err) => {
       console.log(err);

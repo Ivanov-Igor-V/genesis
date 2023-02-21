@@ -4,20 +4,20 @@ export const useEssences = defineStore({
   id: "essence",
   state: () => {
     return {
-      leads: ['dsada'],
+      leads: [],
       companies: [],
       contacts: [],
     };
   },
   actions: {
-    addLeadToList(id) {
-      this.leads.push(id);
+    addLeadToList(idArray) {
+      this.leads.push(...idArray);
     },
-    addContactToList(id) {
-      this.leads.push(id);
+    addContactToList(idArray) {
+      this.contacts.push(...idArray);
     },
-    addCompanyToList(id) {
-      this.leads.push(id);
+    addCompanyToList(idArray) {
+      this.companies.push(...idArray);
     },
   },
   getters: {

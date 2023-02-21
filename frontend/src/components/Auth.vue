@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <input type="text" v-model="userID" />
-    <button @click="onLogin">Login</button>
+  <div class="auth">
+    <MyInput type="text" v-model="userID" />
+    <MyButton @confirm="onLogin" />
   </div>
 </template>
 
@@ -9,8 +9,15 @@
 import axios from "axios";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import MyButton from "./MyButton.vue";
+import MyInput from "./MyInput.vue";
 
 export default {
+  name: "Auth",
+  components: {
+    MyButton,
+    MyInput,
+  },
   setup() {
     const router = useRouter();
     const userID = ref("30878566");
@@ -36,5 +43,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.auth {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+}
 </style>
