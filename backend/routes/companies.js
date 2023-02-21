@@ -32,9 +32,12 @@ router.get("/", (req, res, next) => {
       },
     })
     .then((data) => {
-      const createIDs = []
-      data._embedded.companies.forEach(lead => createIDs.push(lead.id) )
-      return res.json(createIDs)
+      const createIDs = [];
+      if (data._embedded) {
+        data._embedded.companies.forEach((company) => createIDs.push(company.id));
+        return res.json(createIDs);
+      }
+      return res.json(data);
     })
     .catch((err) => {
       console.log(err);

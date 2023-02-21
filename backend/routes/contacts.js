@@ -13,10 +13,12 @@ router.post("/", (req, res, next) => {
       },
     })
     .then(({ data }) => {
-      console.log(data);
-      const createIDs = []
-      data._embedded.contacts.forEach(contact => createIDs.push(contact.id) )
-      return res.json(createIDs)
+      const createIDs = [];
+      if (data._embedded) {
+        data._embedded.contacts.forEach((contact) => createIDs.push(contact.id));
+        return res.json(createIDs);
+      }
+      return res.json(data);
     })
     .catch((err) => {
       console.log(err);

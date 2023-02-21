@@ -6,19 +6,22 @@ const router = express.Router();
 
 router.post("/", (req, res, next) => {
   api
-    .post(PATH, JSON.stringify(req.body), {
+    .post(PATH, req.body, {
       headers: {
         Authorization: req.headers.authorisation,
-        "x-domain": req.headers["x-domain"]
+        "x-domain": req.headers["x-domain"],
       },
     })
-    .then(({data}) => {
-      const createIDs = []
-      data._embedded.leads.forEach(lead => createIDs.push(lead.id) )
-      return res.json(createIDs)
+    .then(({ data }) => {
+      const createIDs = [];
+      if (data._embedded) {
+        data._embedded.leads.forEach((lead) => createIDs.push(lead.id));
+        return res.json(createIDs);
+      }
+      return res.json(data);
     })
     .catch((err) => {
-      console.log('ERROR!', err);
+      console.log("ERROR!", err);
       return next(err);
     });
 });
@@ -28,7 +31,7 @@ router.get("/", (req, res, next) => {
     .get(PATH, {
       headers: {
         Authorization: req.headers.authorisation,
-        "x-domain": req.headers["x-domain"]
+        "x-domain": req.headers["x-domain"],
       },
     })
     .then((data) => {
@@ -40,14 +43,13 @@ router.get("/", (req, res, next) => {
     });
 });
 
-
 router.get("/:id", (req, res, next) => {
-  const {id} = req.params
+  const { id } = req.params;
   api
     .get(`${PATH}/${id}`, {
       headers: {
         Authorization: req.headers.authorisation,
-        "x-domain": req.headers["x-domain"]
+        "x-domain": req.headers["x-domain"],
       },
     })
     .then((data) => {
