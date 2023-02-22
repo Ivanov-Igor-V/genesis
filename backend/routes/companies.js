@@ -9,13 +9,18 @@ router.post("/", (req, res, next) => {
     .post(PATH, req.body, {
       headers: {
         Authorization: req.headers.authorisation,
-        "x-domain": req.headers["x-domain"]
+        "x-domain": req.headers["x-domain"],
       },
     })
     .then(({ data }) => {
-      const createIDs = []
-      data._embedded.companies.forEach(company => createIDs.push(company.id) )
-      return res.json(createIDs)
+      const createIDs = [];
+      if (data._embedded) {
+        data._embedded.companies.forEach((company) =>
+          createIDs.push(company.id)
+        );
+        return res.json(createIDs);
+      }
+      return res.json(data);
     })
     .catch((err) => {
       console.log(err);
@@ -28,16 +33,11 @@ router.get("/", (req, res, next) => {
     .get(PATH, {
       headers: {
         Authorization: req.headers.authorisation,
-        "x-domain": req.headers["x-domain"]
+        "x-domain": req.headers["x-domain"],
       },
     })
     .then((data) => {
-      const createIDs = [];
-      if (data._embedded) {
-        data._embedded.companies.forEach((company) => createIDs.push(company.id));
-        return res.json(createIDs);
-      }
-      return res.json(data);
+      return res.json(data.data);
     })
     .catch((err) => {
       console.log(err);
